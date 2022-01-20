@@ -118,16 +118,6 @@ public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
               activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
           }
         }
-        
-        // Callback
-       activityViewController.completionWithItemsHandler = {
-           activity, success, items, error in
-           {
-               DispatchQueue.main.async{
-                   self.channel?.invokeMethod("SuccessSheet", arguments: nil)
-               }
-           }()
-       }
 
         DispatchQueue.main.async {
           UIApplication.topViewController()?.present(activityViewController, animated: true, completion: nil)
@@ -149,6 +139,16 @@ public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
                 fakeViewController?.dismiss(animated: false, completion: nil)
             }
         }
+
+     // Callback
+       activityViewController.completionWithItemsHandler = {
+           activity, success, items, error in
+           {
+               DispatchQueue.main.async{
+                   self.channel?.invokeMethod("SuccessSheet", arguments: nil)
+               }
+           }()
+       }
 
         UIApplication.topViewController()?.present(fakeViewController, animated: true) { [weak fakeViewController] in
             fakeViewController?.present(activityViewController, animated: true, completion: nil)
