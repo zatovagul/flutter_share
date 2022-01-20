@@ -4,10 +4,13 @@ import UIKit
 public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
     
   private var result: FlutterResult?
+    private var channel: FlutterMethodChannel?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "flutter_share", binaryMessenger: registrar.messenger())
-    registrar.addMethodCallDelegate(SwiftFlutterSharePlugin(), channel: channel)
+      let plugin = SwiftFlutterSharePlugin()
+      plugin.channel = channel
+    registrar.addMethodCallDelegate(plugin, channel: channel)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -115,6 +118,16 @@ public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
               activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
           }
         }
+        
+        // Callback
+       activityViewController.completionWithItemsHandler = {
+           activity, success, items, error in
+           {
+               DispatchQueue.main.async{
+                   self.channel?.invokeMethod("SuccessSheet", arguments: nil)
+               }
+           }()
+       }
 
         DispatchQueue.main.async {
           UIApplication.topViewController()?.present(activityViewController, animated: true, completion: nil)

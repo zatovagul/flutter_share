@@ -17,7 +17,11 @@ class MyApp extends StatelessWidget {
         title: 'Example share',
         text: 'Example share text',
         linkUrl: 'https://flutter.dev/',
-        chooserTitle: 'Example Chooser Title');
+        chooserTitle: 'Example Chooser Title',
+      onCallback: (t){
+          print("ShareSuccesfull $t");
+      }
+    );
   }
 
   Future<void> shareFile() async {

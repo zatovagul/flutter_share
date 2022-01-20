@@ -19,7 +19,9 @@ class FlutterShare {
       {required String title,
       String? text,
       String? linkUrl,
-      String? chooserTitle}) async {
+      String? chooserTitle,
+      Function(String message)? onCallback
+      }) async {
     assert(title.isNotEmpty);
 
     if (title.isEmpty) {
@@ -31,6 +33,12 @@ class FlutterShare {
       'text': text,
       'linkUrl': linkUrl,
       'chooserTitle': chooserTitle,
+    });
+    _channel.setMethodCallHandler((call)async{
+      if(onCallback!=null){
+        onCallback(call.method);
+      }
+      return true;
     });
 
     return success;
@@ -51,7 +59,8 @@ class FlutterShare {
       required String filePath,
       String? text,
       String? chooserTitle,
-      String fileType = '*/*'}) async {
+      String fileType = '*/*',
+      Function(String message)? onCallback}) async {
     assert(title.isNotEmpty);
     assert(filePath.isNotEmpty);
 
@@ -68,6 +77,12 @@ class FlutterShare {
       'filePath': filePath,
       'fileType': fileType,
       'chooserTitle': chooserTitle,
+    });
+    _channel.setMethodCallHandler((call)async{
+      if(onCallback!=null){
+        onCallback(call.method);
+      }
+      return true;
     });
 
     return success;
